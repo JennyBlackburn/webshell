@@ -33,6 +33,8 @@ if(isset($_COOKIE["cp_from"]) && isset($_COOKIE["cp_to"]) && !empty($command_out
 	$command_output = iconv($_COOKIE["cp_from"], $_COOKIE["cp_to"], $command_output);
 }
 
+if()
+
 function getDirectoryContents($dir) {
 	$result = [];
 	if (!is_dir($dir)) {
@@ -50,7 +52,7 @@ function getDirectoryContents($dir) {
 		$result[$item] = [
 			'type' => is_dir($path) ? 'directory' : 'file',
 			'permissions' => getUnixPermissions(fileperms($path)),
-			'owner' => posix_getpwuid($stat['uid'])['name'],
+			'owner' => ':0', //posix_getpwuid($stat['uid'])['name'],
 			'size' => formatSize($stat['size']),
 			'modified' => date("F d Y H:i:s", $stat['mtime']),
 		];

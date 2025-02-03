@@ -32,9 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if(isset($_COOKIE["cp_from"]) && isset($_COOKIE["cp_to"]) && !empty($command_output)){
 	$command_output = iconv($_COOKIE["cp_from"], $_COOKIE["cp_to"], $command_output);
 }
-
-if()
-
 function getDirectoryContents($dir) {
 	$result = [];
 	if (!is_dir($dir)) {

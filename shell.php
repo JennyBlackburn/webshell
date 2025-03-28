@@ -32,6 +32,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 if(isset($_COOKIE["cp_from"]) && isset($_COOKIE["cp_to"]) && !empty($command_output)){
 	$command_output = iconv($_COOKIE["cp_from"], $_COOKIE["cp_to"], $command_output);
 }
+
+function getOwner($path){
+    if(function_exists("posix_getpwuid"))
+      return posix_getpwuid(fileowner($path))["name"];
+    return fileowner($path);
+}
+
 function getDirectoryContents($dir) {
 	$result = [];
 	if (!is_dir($dir)) {
@@ -49,7 +56,7 @@ function getDirectoryContents($dir) {
 		$result[$item] = [
 			'type' => is_dir($path) ? 'directory' : 'file',
 			'permissions' => getUnixPermissions(fileperms($path)),
-			'owner' => ':0', //posix_getpwuid($stat['uid'])['name'],
+			'owner' => getOwner($path), //posix_getpwuid($stat['uid'])['name'],
 			'size' => formatSize($stat['size']),
 			'modified' => date("F d Y H:i:s", $stat['mtime']),
 		];

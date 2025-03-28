@@ -1,0 +1,51 @@
+body {
+	font-family: Arial, sans-serif;
+	background-color: #121212;
+	color: #e0e0e0;
+}
+.directory-path form { display: inline; }
+.directory-path input[type="submit"] {
+	background: none;
+	border: none;
+	color: #bb86fc;
+	cursor: pointer;
+	text-decoration: underline;
+}
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 8px; text-align: left; border: 1px solid #333; }
+th { background-color: #333; }
+tr:nth-child(even) { background-color: #1e1e1e; }
+tr:hover { background-color: #333; }
+textarea { width: 100%; height: 150px; background-color: #333; color: #e0e0e0; border: 1px solid #555; }
+input, button {
+	background-color: #333;
+	color: #e0e0e0;
+	border: 1px solid #555;
+	padding: 5px;
+}
+button { cursor: pointer; }
+h1, h3 { color: #bb86fc; }
+
+/* Style buttons to look like links */
+.link-text {
+	background: none;
+	border: none;
+	color: #bb86fc;
+	/*text-decoration: underline;*/
+	cursor: pointer;
+	font-size: inherit;
+	font-family: inherit;
+	padding: 0;
+	margin: 0;
+}
+
+/* Remove focus outline for better aesthetics */
+.link-text:focus {
+	outline: none;
+}
+
+/* Optional: Change color when hovered over */
+.link-text:hover {
+	color: purple;
+}
+
